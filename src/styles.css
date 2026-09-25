@@ -193,18 +193,20 @@ body:has(dialog[open]) {
   opacity: 0.85;
 }
 
-/* Cover dialog */
+/* Open book dialog */
 
 .cover {
-  width: min(420px, 100% - 32px);
+  --paper: #faf6ec;
+  --paper-ink: #1a2b3b;
+  --gutter: #d9cbb0;
+  width: min(640px, 100% - 32px);
   max-width: none;
   max-height: calc(100dvh - 32px);
   padding: 0;
   border: 0;
-  border-radius: 4px 10px 10px 4px;
-  color: var(--ink);
-  /* binding strip on the left edge */
-  background: linear-gradient(90deg, rgb(0 0 0 / 0.25) 0 12px, transparent 12px), var(--c);
+  border-radius: 6px;
+  overflow: auto;
+  background: none;
 }
 
 .cover[open] {
@@ -231,41 +233,51 @@ body:has(dialog[open]) {
   from { opacity: 0; }
 }
 
-.cover__inner {
+.cover__spread {
   position: relative;
-  padding: 44px 36px 36px 48px;
-  text-align: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 320px;
 }
 
-/* decorative rule around the cover */
-.cover__inner::before {
-  content: '';
-  position: absolute;
-  inset: 14px 14px 14px 26px;
-  border: 1px solid var(--ink);
-  border-radius: 3px;
-  opacity: 0.3;
-  pointer-events: none;
+/* left page: the inside of the book's cover */
+.cover__front {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 28px;
+  text-align: center;
+  color: var(--ink);
+  background: var(--c);
+}
+
+/* right page, with the gutter down its left edge */
+.cover__page {
+  padding: 48px 32px 32px;
+  color: var(--paper-ink);
+  background: var(--paper);
+  border-left: 3px solid var(--gutter);
 }
 
 .cover__close {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 12px;
+  right: 12px;
   width: 32px;
   height: 32px;
   border: 0;
   border-radius: 50%;
   font-size: 1.4rem;
   line-height: 1;
-  color: inherit;
+  color: var(--paper-ink);
   background: transparent;
   cursor: pointer;
 }
 
 .cover__close:hover,
 .cover__close:focus-visible {
-  background: rgb(0 0 0 / 0.18);
+  background: rgb(0 0 0 / 0.08);
 }
 
 .cover__year {
@@ -276,7 +288,7 @@ body:has(dialog[open]) {
 }
 
 .cover__title {
-  margin: 0.3em 0 0.5em;
+  margin: 0.3em 0 0.8em;
   font-family: var(--serif);
   font-size: 2rem;
   font-weight: 600;
@@ -284,27 +296,12 @@ body:has(dialog[open]) {
   text-wrap: balance;
 }
 
-.cover__rule {
-  width: 48px;
-  height: 1px;
-  margin: 0 auto 1.2em;
-  background: currentColor;
-  opacity: 0.5;
-}
-
-.cover__desc {
-  margin: 0;
-  font-size: 0.95rem;
-  line-height: 1.6;
-  text-wrap: pretty;
-}
-
 .cover__tags {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 6px;
-  margin: 1.4em 0 0;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
@@ -313,30 +310,71 @@ body:has(dialog[open]) {
   padding: 0.25em 0.75em;
   font-size: 0.75rem;
   border: 1px solid color-mix(in srgb, var(--ink) 45%, transparent);
-  border-radius: 999px;
+}
+
+.cover__desc {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1rem;
+  line-height: 1.65;
+  text-wrap: pretty;
 }
 
 .cover__links {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
+  gap: 8px 20px;
   margin-top: 1.6em;
 }
 
 .cover__links a {
-  padding: 0.55em 1.2em;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   font-weight: 600;
+  color: #1a4f80;
   text-decoration: none;
-  color: var(--c);
-  background: var(--ink);
-  border-radius: 999px;
-  transition: opacity 0.15s;
+  text-underline-offset: 3px;
 }
 
-.cover__links a:hover {
-  opacity: 0.85;
+.cover__links a:hover,
+.cover__links a:focus-visible {
+  text-decoration: underline;
+}
+
+/* phones: stack the pages, cover on top */
+@media (max-width: 600px) {
+  .cover__spread {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .cover__front {
+    padding: 44px 24px 28px;
+  }
+
+  .cover__page {
+    padding: 24px;
+    border-left: 0;
+    border-top: 3px solid var(--gutter);
+  }
+
+  .cover__close {
+    color: var(--ink);
+  }
+
+  .cover__close:hover,
+  .cover__close:focus-visible {
+    background: rgb(0 0 0 / 0.18);
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 @media (prefers-reduced-motion: reduce) {
