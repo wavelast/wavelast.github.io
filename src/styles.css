@@ -125,6 +125,14 @@ body:has(dialog[open]) {
   outline-offset: 2px;
 }
 
+.book--filler {
+  cursor: default;
+}
+
+.book--filler:hover {
+  transform: none;
+}
+
 .book__title {
   position: relative;
   max-height: calc(100% - var(--shelf-h) * 0.22); /* CLEARANCE in spine.js */
@@ -140,19 +148,17 @@ body:has(dialog[open]) {
   color: var(--ink);
 }
 
-/* variant 0: double lines */
+/* variant 0: dashed lines, like stitching */
 .book--v0::before,
 .book--v0::after {
   content: '';
   position: absolute;
-  inset-inline: 0;
-  height: 2px;
-  background: var(--ink);
-  box-shadow: 0 5px 0 var(--ink);
-  opacity: 0.55;
+  inset-inline: 3px;
+  border-top: 2px dashed var(--ink);
+  opacity: 0.6;
 }
-.book--v0::before { top: var(--edge); }
-.book--v0::after { bottom: calc(var(--edge) + 5px); }
+.book--v0::before { top: calc(var(--edge) + 3px); }
+.book--v0::after { bottom: calc(var(--edge) + 3px); }
 
 /* variant 1: dark bands */
 .book--v1::before,
@@ -174,6 +180,17 @@ body:has(dialog[open]) {
   border: 1px solid var(--ink);
   border-radius: 2px;
   opacity: 0.45;
+}
+
+/* variant 3: solid headcap */
+.book--v3::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: calc(var(--edge) + 5px);
+  border-radius: inherit;
+  background: var(--ink);
+  opacity: 0.85;
 }
 
 /* Cover dialog */
