@@ -55,9 +55,9 @@ export const MIN_WIDTH = 34 // px; spines are 34–55px wide
 
 export function spineFor(project, index) {
   const h = hash(project.title)
-  const swatch = project.color
-    ? { color: project.color, ink: inkFor(project.color) }
-    : PALETTE[index % PALETTE.length]
+  // A project can set its own color and ink; a custom color without one gets a readable ink picked for it.
+  const base = project.color ? { color: project.color, ink: inkFor(project.color) } : PALETTE[index % PALETTE.length]
+  const swatch = project.ink ? { ...base, ink: project.ink } : base
 
   // Grow the spine to fit its title, then shrink the font if it still doesn't; CSS ellipsizes the rest.
   const titleEms = project.title.length * EM_PER_CHAR
